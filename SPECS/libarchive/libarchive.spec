@@ -1,25 +1,18 @@
 Summary:    Multi-format archive and compression library
 Name:       libarchive
-Version:    3.3.3
-Release:    6%{?dist}
+Version:    3.4.3
+Release:    1%{?dist}
 License:    BSD 2-Clause License
 URL:        http://www.libarchive.org/
 Group:      System Environment/Development
 Vendor:     VMware, Inc.
 Distribution:   Photon
 Source0:    http://www.libarchive.org/downloads/%{name}-%{version}.tar.gz
-%define sha1 libarchive=499a8f48a895faff4151d7398b24070d578f0b2e
-Patch0:     libarchive-CVE-2018-1000877.patch
-Patch1:     libarchive-CVE-2018-1000878.patch
-Patch2:     libarchive-CVE-2018-1000879.patch
-Patch3:     libarchive-CVE-2018-1000880.patch
-Patch4:     libarchive-CVE-2019-1000019.patch
-Patch5:     libarchive-CVE-2019-1000020.patch
-Patch6:     libarchive-CVE-2019-18408.patch
-Patch7:     libarchive-CVE-2019-19221.patch
-Patch8:     libarchive-CVE-2020-21674.patch
+%define sha1 libarchive=6528f38fa03a44bfcf58435ec8512ffea2851c99
 BuildRequires:  xz-libs
 BuildRequires:  xz-devel
+BuildRequires:  openssl-devel
+Requires:       openssl
 Requires:       xz-libs
 %description
 Multi-format archive and compression library
@@ -31,26 +24,18 @@ Requires:	%{name} = %{version}-%{release}
 It contains the libraries and header files to create applications
 
 %prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
+%autosetup -p1
 
 %build
 export CFLAGS="%{optflags}"
 %configure --disable-static
-
+GCCVERSION=$(gcc --version | grep ^gcc | sed 's/^.* //g')
+$(dirname $(gcc -print-prog-name=cc1))/install-tools/mkheaders
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}%{_infodir}
-make DESTDIR=%{buildroot} install
+make DESTDIR=%{buildroot} install %{?_smp_mflags}
 find %{buildroot}%{_libdir} -name '*.la' -delete
 
 %check
@@ -72,6 +57,8 @@ make %{?_smp_mflags} check
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+*   Wed Sep 15 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 3.4.3-1
+-   openssl 3.0.0 compatibility
 *   Mon Nov 02 2020 Ankit Jain <ankitja@vmware.com> 3.3.3-6
 -   Fix for CVE-2020-21674
 *   Tue Feb 04 2020 Ankit Jain <ankitja@vmware.com> 3.3.3-5

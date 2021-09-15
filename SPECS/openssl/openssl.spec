@@ -1,27 +1,15 @@
 Summary:        Management tools and libraries relating to cryptography
 Name:           openssl
-Version:        1.0.2za
+Version:        3.0.0
 Release:        1%{?dist}
 License:        OpenSSL
 URL:            http://www.openssl.org
 Group:          System Environment/Security
 Vendor:         VMware, Inc.
 Distribution:   Photon
-Source0:        http://www.openssl.org/source/vmware-OpenSSL_1_0_2za.tar.gz
-%define sha1    vmware-OpenSSL_1_0_2za=9f29e5179926c25ea03068b8c5e17752d6d903d1
+Source0:        http://www.openssl.org/source/openssl-3.0.0.tar.gz
+%define sha1    openssl=93b7693e18c9c122ad4e95b509dc856d2e4618ac
 Source1:        rehash_ca_certificates.sh
-%if 0%{?with_fips:1}
-Source100:      openssl-fips-2.0.20-vmw.tar.gz
-%define sha1    openssl-fips=973ac82a77285f573296ffe94809da8c019aab33
-%endif
-Patch0:         c_rehash.patch
-Patch1:         openssl-ipv6apps.patch
-Patch2:         openssl-init-conslidate.patch
-Patch3:         openssl-drbg-default-read-system-fips.patch
-%if 0%{?with_fips:1}
-Patch4:         fips-2.20-vmw.patch
-%endif
-Patch5:         openssl-optimized-curves.patch
 %if %{with_check}
 BuildRequires: zlib-devel
 %endif
@@ -61,45 +49,27 @@ Requires: openssl = %{version}-%{release}
 Perl scripts that convert certificates and keys to various formats.
 
 %prep
-# Using autosetup is not feasible
-%setup -q -n vmware-OpenSSL_1_0_2za
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%if 0%{?with_fips:1}
-%patch4 -p1
-%endif
-%patch5 -p1
+%autosetup
 
 %build
-%if 0%{?with_fips:1}
-tar xf %{SOURCE100} --no-same-owner -C ..
-# Do not package it to src.rpm
-:> %{SOURCE100}
-%endif
 export CFLAGS="%{optflags}"
 ./config \
-    --prefix=/usr \
-    --libdir=lib \
+    --prefix=%{_prefix} \
+    --libdir=%{_libdir} \
     --openssldir=/%{_sysconfdir}/ssl \
-    shared \
-    zlib-dynamic \
-%if 0%{?with_fips:1}
-    fips --with-fipsdir=%{_builddir}/openssl-2.0.20 \
-%endif
-    -Wl,-z,noexecstack \
-    -Wa,--noexecstack "${CFLAGS}" "${LDFLAGS}"
+    --api=1.1.1 \
+    --shared \
+    --with-rand-seed=os,egd \
+    enable-egd \
+    -Wl,-z,noexecstack
 # does not support -j yet
 # make doesn't support _smp_mflags
 make
 %install
 [ %{buildroot} != "/" ] && rm -rf %{buildroot}/*
 # make doesn't support _smp_mflags
-make INSTALL_PREFIX=%{buildroot} MANDIR=/usr/share/man MANSUFFIX=ssl install
+make DESTDIR=%{buildroot} MANDIR=/usr/share/man MANSUFFIX=ssl install
 install -p -m 755 -D %{SOURCE1} %{buildroot}%{_bindir}/
-ln -sf libssl.so.1.0.0 %{buildroot}%{_libdir}/libssl.so.1.0.2
-ln -sf libcrypto.so.1.0.0 %{buildroot}%{_libdir}/libcrypto.so.1.0.2
 
 %check
 # make doesn't support _smp_mflags
@@ -113,19 +83,21 @@ rm -rf %{buildroot}/*
 %files
 %defattr(-,root,root)
 %{_sysconfdir}/ssl/certs
-%{_sysconfdir}/ssl/misc/CA.sh
-%{_sysconfdir}/ssl/misc/c_hash
-%{_sysconfdir}/ssl/misc/c_info
-%{_sysconfdir}/ssl/misc/c_issuer
-%{_sysconfdir}/ssl/misc/c_name
+%{_sysconfdir}/ssl/misc/CA.pl
+%{_sysconfdir}/ssl/ct_log_list.cnf
+%{_sysconfdir}/ssl/ct_log_list.cnf.dist
+%{_sysconfdir}/ssl/misc/tsget.pl
+%{_sysconfdir}/ssl/openssl.cnf.dist
 %{_sysconfdir}/ssl/openssl.cnf
 %{_sysconfdir}/ssl/private
 %{_bindir}/openssl
 %{_libdir}/*.so.*
-%{_libdir}/engines/*
+%{_libdir}/engines*/*
+%{_libdir}/ossl-modules/legacy.so
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man7/*
+%{_docdir}/*
 
 %files devel
 %{_includedir}/*
@@ -143,6 +115,8 @@ rm -rf %{buildroot}/*
 /%{_bindir}/rehash_ca_certificates.sh
 
 %changelog
+*   Wed Sep 15 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 3.0.0-1
+-   update to openssl 3.0.0
 *   Tue Aug 24 2021 Srinidhi Rao <srinidhir@vmware.com> 1.0.2za-1
 -   Update to openssl 1.0.2za
 *   Thu Feb 25 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 1.0.2y-1
