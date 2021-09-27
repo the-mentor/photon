@@ -11,7 +11,7 @@
 Summary:        Kernel
 Name:           linux-esx
 Version:        5.10.61
-Release:        3%{?kat_build:.kat}%{?dist}
+Release:        4%{?kat_build:.kat}%{?dist}
 License:        GPLv2
 URL:            http://www.kernel.org/
 Group:          System Environment/Kernel
@@ -350,6 +350,8 @@ ln -sf linux-%{uname_r}.cfg /boot/photon.cfg
 %{_usrsrc}/linux-headers-%{uname_r}
 
 %changelog
+*   Mon Sep 27 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 5.10.61-4
+-   compile with openssl 3.0.0
 *   Fri Sep 17 2021 Ankit Jain <ankitja@vmware.com> 5.10.61-3
 -   vtarfs: Added support for LongFilename/LongLink
 *   Tue Sep 07 2021 Ankit Jain <ankitja@vmware.com> 5.10.61-2

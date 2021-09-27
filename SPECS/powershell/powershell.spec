@@ -29,14 +29,18 @@ BuildRequires:  photon-release
 Requires:       icu
 #gallery download scripts will fail without this
 Requires:       zlib-devel
+BuildArch:      aarch64_1
 
 %description
 PowerShell is an automation and configuration management platform.
 It consists of a cross-platform command-line shell and associated scripting language.
 
 %prep
+# Using autosetup is not feasible
 %setup -qn PowerShell-%{version}
+# Using autosetup is not feasible
 %setup -qcTDa 1 -n PowerShell-Native
+# Using autosetup is not feasible
 %setup -qcTDa 2 -n %{name}-linux-%{version}-1-x64
 
 %build
@@ -48,6 +52,7 @@ chmod +x ./build.sh
 cd %{_builddir}/PowerShell-Native/powershell-native-7.1.0
 pushd src/libpsl-native
 cmake -DCMAKE_BUILD_TYPE=Debug .
+# make doesn't support _smp_mflags
 make -j
 
 %install
@@ -74,6 +79,7 @@ cd %{_builddir}/PowerShell-%{version}/test/xUnit
 dotnet test
 export LANG=en_US.UTF-8
 cd %{_builddir}/PowerShell-Native/powershell-native-7.1.0/src/libpsl-native
+# make doesn't support _smp_mflags
 make test
 
 %post

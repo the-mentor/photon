@@ -1,7 +1,7 @@
 Name:           systemd
 URL:            http://www.freedesktop.org/wiki/Software/systemd/
 Version:        247.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        LGPLv2+ and GPLv2+ and MIT
 Summary:        System and Service Manager
 
@@ -656,6 +656,8 @@ udevadm hwdb --update &>/dev/null || :
 %files lang -f ../%{name}.lang
 
 %changelog
+* Fri Sep 17 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 247.8-3
+- Bump up release for openssl
 * Wed Sep 08 2021 Nitesh Kumar <kunitesh@vmware.com> 247.8-2
 - Replacement of ITS suggested words.
 * Thu Jul 22 2021 Susant Sahani <ssahani@vmware.com>  247.8-1

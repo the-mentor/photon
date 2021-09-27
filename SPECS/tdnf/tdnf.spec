@@ -3,7 +3,7 @@
 Summary:        dnf/yum equivalent using C libs
 Name:           tdnf
 Version:        3.1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Vendor:         VMware, Inc.
 Distribution:   Photon
 License:        LGPLv2.1,GPLv2
@@ -13,6 +13,7 @@ Source0:        %{name}-%{version}.tar.gz
 %define sha1    %{name}=ac85ed7b6547005aad6055aad83268dbd1ad5793
 
 Patch0:         pool_flag_noinstalledobsoletes.patch
+Patch1:         0001-openssl-3.0.0-compatibility.patch
 
 Requires:       rpm-libs
 Requires:       curl-libs
@@ -88,7 +89,7 @@ Requires:  %{name} = %{version}-%{release}
 Systemd units that can periodically download package upgrades and apply them.
 
 %prep
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -n %{name}-%{version} -p1
 
 %build
 mkdir build && cd build
@@ -248,6 +249,8 @@ systemctl try-restart tdnf-cache-updateinfo.timer >/dev/null 2>&1 || :
     %{_libdir}/systemd/system/%{name}-automatic-notifyonly.service
 
 %changelog
+*   Sat Aug 21 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 3.1.4-2
+-   openssl 3.0.0 compatibility
 *   Mon Aug 2 2021 Oliver Kurth <okurth@vmware.com> 3.1.4-1
 -   update to 3.1.4
 -   fix configreader key reading logic

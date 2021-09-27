@@ -1,7 +1,7 @@
 Summary:        Free version of the SSH connectivity tools
 Name:           openssh
 Version:        8.5p1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        BSD
 URL:            https://www.openssh.com/
 Group:          System Environment/Security
@@ -187,6 +187,8 @@ rm -rf %{buildroot}/*
 %{_mandir}/man8/ssh-sk-helper.8.gz
 
 %changelog
+*   Fri Sep 03 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 8.5p1-3
+-   Bump up for openssl
 *   Wed Aug 04 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 8.5p1-2
 -   Fix spec checker build failure
 *   Wed May 26 2021 Sujay G <gsujay@vmware.com> 8.5p1-1

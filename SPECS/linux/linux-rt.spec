@@ -20,7 +20,7 @@ Name:           linux-rt
 Version:        5.10.61
 # Keep rt_version matched up with localversion.patch
 %define rt_version rt52
-Release:        1%{?kat_build:.kat}%{?dist}
+Release:        2%{?kat_build:.kat}%{?dist}
 License:    	GPLv2
 URL:        	http://www.kernel.org/
 Group:        	System Environment/Kernel
@@ -1063,6 +1063,8 @@ ln -sf %{name}-%{uname_r}.cfg /boot/photon.cfg
 %{_usrsrc}/%{name}-headers-%{uname_r}
 
 %changelog
+*   Fri Sep 03 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 5.10.61-2
+-   compile with openssl 3.0.0
 *   Fri Aug 27 2021 Ankit Jain <ankitja@vmware.com> 5.10.61-1
 -   Update to version 5.10.61
 *   Wed Aug 18 2021 Keerthana K <keerthanak@vmware.com> 5.10.52-2

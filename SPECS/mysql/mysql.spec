@@ -1,7 +1,7 @@
 Summary:        MySQL.
 Name:           mysql
 Version:        8.0.26
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPLv2
 Group:          Applications/Databases
 Vendor:         VMware, Inc.
@@ -17,6 +17,7 @@ BuildRequires:  libtirpc-devel
 BuildRequires:  rpcsvc-proto-devel
 BuildRequires:  protobuf-devel
 Requires:       protobuf
+Patch0:         0001-mysql-compatibility-with-openssl-3.0.patch
 
 %description
 MySQL is a free, widely used SQL engine. It can be used as a fast database as well as a rock-solid DBMS using a modular engine architecture.
@@ -78,6 +79,8 @@ make test %{?_smp_mflags}
 %{_libdir}/pkgconfig/mysqlclient.pc
 
 %changelog
+*   Mon Aug 16 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 8.0.26-3
+-   openssl 3.0.0 compatibility
 *   Mon Aug 09 2021 Ankit Jain <ankitja@vmware.com> 8.0.26-2
 -   Fix spec with autosetup and make smp flag
 *   Mon Aug 02 2021 Shreyas B <shreyasb@vmware.com> 8.0.26-1

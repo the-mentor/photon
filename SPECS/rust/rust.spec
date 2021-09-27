@@ -1,7 +1,7 @@
 Summary:        Rust Programming Language
 Name:           rust
 Version:        1.54.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        Apache License Version 2.0 and MIT
 URL:            https://github.com/rust-lang/rust
 Group:          Applications/System
@@ -11,6 +11,7 @@ Distribution:   Photon
 # Source0 + .git as it requires git hooks at build time
 Source0:        https://github.com/rust-lang/rust/archive/%{name}-%{version}.tar.gz
 %define sha1    %{name}-%{version}=febcbf0146a8a67780042f9d3d2178b1a692b41b
+Patch0:         0001-openssl-3.0.0-support.patch
 BuildRequires:  git
 BuildRequires:  cmake
 BuildRequires:  glibc
@@ -63,6 +64,8 @@ rm %{buildroot}%{_docdir}/%{name}/*.old
 %{_sysconfdir}/bash_completion.d/cargo
 
 %changelog
+*   Thu Sep 02 2021 Satya Naga Vasamsetty <svasamsetty@vmware.com> 1.54.0-2
+-   bump up for openssl
 *   Sat Aug 28 2021 Ankit Jain <ankitja@vmware.com> 1.54.0-1
 -   Updated to 1.54.0
 *   Mon Aug 23 2021 Ankit Jain <ankitja@vmware.com> 1.51.0-4
